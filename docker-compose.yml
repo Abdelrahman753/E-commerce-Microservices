@@ -12,6 +12,20 @@ services:
       - SQLALCHEMY_DATABASE_URI=postgresql://auth_user:auth_pass@auth_db:5432/auth_db
     depends_on:
       - auth_db
+    restart: unless-stopped
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    ports:
+      - "5002:5002"
+    environment:
+      - SECRET_KEY=supersecretkey123
+      - SQLALCHEMY_DATABASE_URI=postgresql://user_user:user_pass@user_db:5432/user_db
+    depends_on:
+      - auth-service
+      - user_db
+    restart: unless-stopped
 
   auth_db:
     image: postgres:13
@@ -24,17 +38,18 @@ services:
       - auth_db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-
-  auth-service:
-    build: ./auth-service
-    container_name: auth-service
-    ports:
-      - "5001:5001"
+  user_db:
+    image: postgres:13
+    container_name: user_db
     environment:
-      - SECRET_KEY=supersecretkey123
-      - SQLALCHEMY_DATABASE_URI=postgresql://auth_user:auth_pass@auth_db:5432/auth_db
-    depends_on:
-      - auth_db
+      POSTGRES_DB: user_db
+      POSTGRES_USER: user_user
+      POSTGRES_PASSWORD: user_pass
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
 
 volumes:
   auth_db_data:
+  user_db_data:
