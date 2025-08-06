@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    ports:
+      - "5001:5001"
+    environment:
+      - SECRET_KEY=supersecretkey123
+      - SQLALCHEMY_DATABASE_URI=postgresql://auth_user:auth_pass@auth_db:5432/auth_db
+    depends_on:
+      - auth_db
+
   auth_db:
     image: postgres:13
     container_name: auth_db
