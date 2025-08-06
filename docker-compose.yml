@@ -27,6 +27,18 @@ services:
       - user_db
     restart: unless-stopped
 
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    ports:
+      - "5003:5003"
+    environment:
+      - SECRET_KEY=supersecretkey123
+      - SQLALCHEMY_DATABASE_URI=postgresql://product_user:product_pass@product_db:5432/product_db
+    depends_on:
+      - product_db
+    restart: unless-stopped
+
   auth_db:
     image: postgres:13
     container_name: auth_db
@@ -50,6 +62,19 @@ services:
     ports:
       - "5433:5432"
 
+  product_db:
+    image: postgres:13
+    container_name: product_db
+    environment:
+      POSTGRES_DB: product_db
+      POSTGRES_USER: product_user
+      POSTGRES_PASSWORD: product_pass
+    volumes:
+      - product_db_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
 volumes:
   auth_db_data:
   user_db_data:
+  product_db_data:
