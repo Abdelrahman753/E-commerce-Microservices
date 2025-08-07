@@ -67,6 +67,20 @@ services:
       - cart-service
     restart: unless-stopped
 
+  payment-service:
+    build: ./payment-service
+    container_name: payment-service
+    ports:
+      - "5006:5006"
+    environment:
+      - SECRET_KEY=supersecretkey123
+      - SQLALCHEMY_DATABASE_URI=postgresql://payment_user:payment_pass@payment_db:5432/payment_db
+    depends_on:
+      - payment_db
+      - auth-service
+      - order-service
+    restart: unless-stopped
+
   auth_db:
     image: postgres:13
     container_name: auth_db
@@ -127,9 +141,22 @@ services:
     ports:
       - "5436:5432"
 
+  payment_db:
+    image: postgres:13
+    container_name: payment_db
+    environment:
+      POSTGRES_DB: payment_db
+      POSTGRES_USER: payment_user
+      POSTGRES_PASSWORD: payment_pass
+    volumes:
+      - payment_db_data:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
+
 volumes:
   auth_db_data:
   user_db_data:
   product_db_data:
   cart_db_data:
   order_db_data:
+  payment_db_data:
