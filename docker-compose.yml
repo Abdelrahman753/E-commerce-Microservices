@@ -53,6 +53,20 @@ services:
       - product-service
     restart: unless-stopped
 
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    ports:
+      - "5005:5005"
+    environment:
+      - SECRET_KEY=supersecretkey123
+      - SQLALCHEMY_DATABASE_URI=postgresql://order_user:order_pass@order_db:5432/order_db
+    depends_on:
+      - order_db
+      - auth-service
+      - cart-service
+    restart: unless-stopped
+
   auth_db:
     image: postgres:13
     container_name: auth_db
@@ -64,6 +78,7 @@ services:
       - auth_db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
   user_db:
     image: postgres:13
     container_name: user_db
@@ -100,8 +115,21 @@ services:
     ports:
       - "5435:5432"
 
+  order_db:
+    image: postgres:13
+    container_name: order_db
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: order_user
+      POSTGRES_PASSWORD: order_pass
+    volumes:
+      - order_db_data:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+
 volumes:
   auth_db_data:
   user_db_data:
   product_db_data:
   cart_db_data:
+  order_db_data:
