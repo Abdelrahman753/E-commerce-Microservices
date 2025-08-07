@@ -39,6 +39,20 @@ services:
       - product_db
     restart: unless-stopped
 
+  cart-service:
+    build: ./cart-service
+    container_name: cart-service
+    ports:
+      - "5004:5004"
+    environment:
+      - SECRET_KEY=supersecretkey123
+      - SQLALCHEMY_DATABASE_URI=postgresql://cart_user:cart_pass@cart_db:5432/cart_db
+    depends_on:
+      - cart_db
+      - auth-service
+      - product-service
+    restart: unless-stopped
+
   auth_db:
     image: postgres:13
     container_name: auth_db
@@ -74,7 +88,20 @@ services:
     ports:
       - "5434:5432"
 
+  cart_db:
+    image: postgres:13
+    container_name: cart_db
+    environment:
+      POSTGRES_DB: cart_db
+      POSTGRES_USER: cart_user
+      POSTGRES_PASSWORD: cart_pass
+    volumes:
+      - cart_db_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+
 volumes:
   auth_db_data:
   user_db_data:
   product_db_data:
+  cart_db_data:
