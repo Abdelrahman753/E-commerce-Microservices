@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب - المتجر الإلكتروني</title>
+    <link rel="stylesheet" href="styles/register.css">
+</head>
+<body>
+    <div class="container">
+        <div class="register-card">
+            <div class="logo">
+                <h1>المتجر</h1>
+            </div>
+            
+            <h2>إنشاء حساب جديد</h2>
+            
+            <form id="register-form" class="register-form">
+                <div class="form-group">
+                    <label for="name">الاسم الكامل</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" name="password" required>
+                    <small class="password-hint">يجب أن تحتوي على 6 أحرف على الأقل</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password">تأكيد كلمة المرور</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
+                </div>
+                
+                <button type="submit" class="register-btn" id="register-btn">
+                    <span class="btn-text">إنشاء الحساب</span>
+                    <span class="btn-loading" style="display: none;">جاري التحميل...</span>
+                </button>
+                
+                <div class="error-message" id="error-message" style="display: none;"></div>
+                <div class="success-message" id="success-message" style="display: none;"></div>
+            </form>
+            
+            <div class="form-footer">
+                <p>لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a></p>
+                <p><a href="index.html">العودة للرئيسية</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="scripts/register.js"></script>
+</body>
+</html>

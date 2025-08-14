@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - My Store</title>
+    <link rel="stylesheet" href="styles/index.css"> <!-- ربط ملف الـ CSS -->
+</head>
+<body>
+
+    <!-- Header -->
+     
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>My Store</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="products.html" class="nav-link">Products</a>
+                <a href="cart.html" class="nav-link">Cart</a>
+                <button id="auth-btn" class="auth-btn">Login</button>
+
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h2>Welcome to My Store</h2>
+            <p>Find the best products at unbeatable prices!</p>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="filters container">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search for products...">
+                <button id="search-btn">Search</button>
+            </div>
+            <div class="category-filter">
+                <select id="category-select">
+                    <option value="">All Categories</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothes">Clothes</option>
+                    <option value="accessories">Accessories</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section class="container">
+            <div id="loading" class="loading">Loading products...</div>
+            <div id="products-container" class="products-grid" style="display:none;"></div>
+            <div id="error" class="error" style="display:none;">
+                Failed to load products.
+                <button id="retry-btn">Retry</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 My Store. All rights reserved.</p>
+    </footer>
+
+    <!-- ربط ملف JavaScript -->
+    <script src="scripts/index.js"></script>
+</body>
+</html>
