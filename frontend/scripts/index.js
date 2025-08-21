@@ -15,21 +15,22 @@ async function fetchProducts(category = "", search = "") {
     productsContainer.style.display = "none";
 
     try {
-        let url = `${API_URL}?per_page=12`;
-        if (category) url += `&category=${encodeURIComponent(category)}`;
+        let url = new URL(API_URL, window.location.origin);
+        url.searchParams.set("per_page", 12);
+        if (category) url.searchParams.set("category", category);
 
         const res = await fetch(url);
         if (!res.ok) throw new Error("Failed to fetch products");
 
         const data = await res.json();
+        let products = data.products || [];
 
-        let products = data.products || []; // نتأكد أنه موجود
-
-        // لو فيه كلمة بحث نصفي النتائج
+        // تصفية نتائج البحث محليًا إذا فيه كلمة بحث
         if (search) {
+            const term = search.toLowerCase();
             products = products.filter(p =>
-                p.name.toLowerCase().includes(search.toLowerCase()) ||
-                (p.description && p.description.toLowerCase().includes(search.toLowerCase()))
+                (p.name && p.name.toLowerCase().includes(term)) ||
+                (p.description && p.description.toLowerCase().includes(term))
             );
         }
 
@@ -45,7 +46,7 @@ async function fetchProducts(category = "", search = "") {
 function displayProducts(products) {
     productsContainer.innerHTML = "";
 
-    if (products.length === 0) {
+    if (!products.length) {
         productsContainer.innerHTML = `<p>No products found.</p>`;
     } else {
         products.forEach(product => {
@@ -53,11 +54,11 @@ function displayProducts(products) {
             productCard.classList.add("product-card");
 
             productCard.innerHTML = `
-                <img src="${product.image_url || 'placeholder.jpg'}" alt="${product.name}">
-                <h3>${product.name}</h3>
+                <img src="${product.image_url || 'placeholder.jpg'}" alt="${product.name || 'Product'}">
+                <h3>${product.name || 'Unnamed Product'}</h3>
                 <p>${product.description || ''}</p>
-                <p class="price">$${product.price.toFixed(2)}</p>
-                <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                <p class="price">$${product.price ? product.price.toFixed(2) : '0.00'}</p>
+                <button class="add-to-cart" data-id="${product.id || ''}">Add to Cart</button>
             `;
 
             productsContainer.appendChild(productCard);
@@ -79,11 +80,12 @@ categorySelect.addEventListener("change", () => {
 // Initial Load
 fetchProducts();
 
+// إدارة زر تسجيل الدخول / تسجيل الخروج
 document.addEventListener("DOMContentLoaded", () => {
     const authBtn = document.getElementById("auth-btn");
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     function updateAuthBtn() {
+        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
         if (currentUser && currentUser.access_token) {
             authBtn.textContent = "Logout";
             authBtn.classList.add("logout");
@@ -96,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateAuthBtn();
 
     authBtn.addEventListener("click", () => {
+        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
         if (currentUser && currentUser.access_token) {
             localStorage.removeItem("currentUser");
             window.location.href = "login.html";

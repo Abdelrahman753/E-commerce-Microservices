@@ -153,6 +153,28 @@ services:
     ports:
       - "5437:5432"
 
+  nginx-gateway:
+    build: ./nginx
+    container_name: nginx-gateway
+    ports:
+      - "3000:80"
+    depends_on:
+      - auth-service
+      - user-service
+      - product-service
+      - cart-service
+      - order-service
+      - payment-service
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - nginx-gateway
+    restart: unless-stopped
+
 volumes:
   auth_db_data:
   user_db_data:
